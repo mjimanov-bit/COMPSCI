@@ -1,0 +1,227 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reminder App</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    .app {
+      width: 90%;
+      max-width: 500px;
+      background: white;
+      padding: 35px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 25px;
+      font-size: 32px;
+    }
+
+    #countOutput {
+      color: #777;
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    .reminder-box {
+      min-height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 21px;
+      line-height: 1.4;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #222;
+      color: white;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .add-section {
+      display: flex;
+      gap: 10px;
+    }
+
+    #reminderInput {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    #reminderInput:focus {
+      border-color: #222;
+    }
+
+    #addButton {
+      white-space: nowrap;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="app">
+
+    <h1>Reminder App</h1>
+
+    <div id="countOutput">0 / 0</div>
+
+    <div class="reminder-box">
+      <div id="reminderOutput">
+        No reminders yet.
+      </div>
+    </div>
+
+    <div class="navigation">
+      <button id="leftButton">← Previous</button>
+      <button id="rightButton">Next →</button>
+    </div>
+
+    <div class="add-section">
+      <input
+        type="text"
+        id="reminderInput"
+        placeholder="Enter a reminder..."
+      >
+
+      <button id="addButton">Add</button>
+    </div>
+
+  </main>
+
+  <script>
+    // Stores all reminders entered by the user.
+    let reminders = [];
+
+    // Stores the index of the reminder currently being displayed.
+    let index = 0;
+
+    // Updates everything displayed on the screen.
+    function updateScreen() {
+      const countOutput = document.getElementById("countOutput");
+      const reminderOutput = document.getElementById("reminderOutput");
+
+      if (reminders.length === 0) {
+        countOutput.textContent = "0 / 0";
+        reminderOutput.textContent = "No reminders yet.";
+        return;
+      }
+
+      countOutput.textContent =
+        (index + 1) + " / " + reminders.length;
+
+      reminderOutput.textContent =
+        reminders[index];
+
+      updateButtons();
+    }
+
+    // Enables or disables the navigation buttons.
+    function updateButtons() {
+      const leftButton = document.getElementById("leftButton");
+      const rightButton = document.getElementById("rightButton");
+
+      leftButton.disabled = index === 0;
+      rightButton.disabled = index === reminders.length - 1;
+    }
+
+    // Adds a new reminder to the list.
+    document.getElementById("addButton").addEventListener("click", function() {
+      const input = document.getElementById("reminderInput");
+      const reminder = input.value.trim();
+
+      if (reminder === "") {
+        return;
+      }
+
+      reminders.push(reminder);
+
+      // Display the newly added reminder.
+      index = reminders.length - 1;
+
+      input.value = "";
+
+      updateScreen();
+      input.focus();
+    });
+
+    // Moves to the previous reminder.
+    document.getElementById("leftButton").addEventListener("click", function() {
+      if (index > 0) {
+        index--;
+        updateScreen();
+      }
+    });
+
+    // Moves to the next reminder.
+    document.getElementById("rightButton").addEventListener("click", function() {
+      if (index < reminders.length - 1) {
+        index++;
+        updateScreen();
+      }
+    });
+
+    // Allows Enter to add a reminder.
+    document.getElementById("reminderInput").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        document.getElementById("addButton").click();
+      }
+    });
+
+    // Initialize the app.
+    updateScreen();
+  </script>
+
+</body>
+</html>
+```
